@@ -1,0 +1,60 @@
+﻿@*@model Shop_4_8_21.Models.tbl_category*@
+
+@{
+    ViewBag.Title = "Category";
+    Layout = null;
+}
+
+
+<h2 class="text-center font-weight-bold mt-5 mb-4">Add New Category</h2>
+
+<div class="text-center">
+
+    <input type="text" id="cat_name" class="w-50 p-1 d-block m-auto form-control" placeholder="Add New Category"/>
+
+    <button id="cat_btn" class="btn btn-dark shadow px-4 py-3 mt-3">Add New Category</button>
+</div>
+
+
+<div id="err" class="mt-4">
+
+</div>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+
+<script>
+
+    $("#cat_btn").click(function () {
+
+        if ($("#cat_name").val() != "") {
+            $.post("/Admin/Cat", { cat_name: $("#cat_name").val() }, function (data) {
+                if (data == 1) {
+                    $("#cat_name").val("")
+                    $("#err").html(`<div class="alert alert-success" role="alert">
+                              Category Successfully Added
+                            </div>`)
+
+                    setTimeout(function () {
+                        $("#err").html("");
+                    },2000)
+
+                }
+
+            });
+        }
+        else {
+            $("#err").html(`<div class="alert alert-danger" role="alert">
+                              Text Fields Must be Filled
+                            </div>`)
+            setTimeout(function () {
+                $("#err").html("");
+            }, 2000)
+        }
+
+        
+    })
+
+
+    
+</script>

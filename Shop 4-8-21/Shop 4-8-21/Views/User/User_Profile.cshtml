@@ -1,0 +1,171 @@
+﻿@model Shop_4_8_21.Models.tbl_user
+
+@{
+    ViewBag.Title = "User_Profile";
+}
+
+<style>
+    .profile {
+        width: 85%;
+        margin: 30px auto;
+        height: auto;
+        padding: 30px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+</style>
+
+
+
+
+<div class="profile">
+    <h2 class="font-weight-bold mb-5">User Profile</h2>
+    @using (Html.BeginForm("User_Profile", "User", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.u_id)
+        @Html.HiddenFor(model => model.u_password)
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.u_name, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.u_name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.u_email, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.u_email, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.u_contact, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.u_contact, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.u_address, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.u_address, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.u_city, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.u_city, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div>
+            <a class="text-dark font-weight-600" data-toggle="modal" data-target="#exampleModal">Change Password Here</a>
+            <br />
+            <a class="text-dark font-weight-600">Forget Password</a>
+        </div>
+
+        <div>
+            <input type="button" value="Update Profile" class="btn btn-block my-5" id="U_edit" />
+        </div>
+
+
+    }
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Password</h5>
+                <a class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="col-form-label">Enter Old Password</label>
+                        <input type="password" class="form-control" id="old">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Enter New Password</label>
+                        <input type="password" class="form-control" id="new">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-id="@Model.u_id" id="Update_pass">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+    $("#U_edit").click(function () {
+        $.ajax({
+            url: "/User/User_Profile",
+            method: "POST",
+            data:
+
+                $("form").serialize()
+            ,
+
+        })
+            .done(function (result) {
+                if (result == 1) {
+                    swal("Done", "Data Update Successfully", "success");
+                }
+            })
+
+    })
+
+
+
+    $("#Update_pass").click(function () {
+
+        var old_pass = $("#old").val();
+        var new_pass = $("#new").val();
+
+        if (old_pass == "" || new_pass == "") {
+            swal("Failed", "Password is Empty", "warning");
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "/User/Update_Password",
+                method: "POST",
+                data: { old_p: old_pass, new_p: new_pass, id: $(this).attr("data-id") }
+
+            })
+                .done(function (result) {
+                    if (result == 1) {
+                        $("#old").val("");
+                        $("#new").val("");
+                        swal("Done", "Password Update Successfully", "success");
+                    }
+                    else {
+                        $("#old").val("");
+                        $("#new").val("");
+                        swal("Failed", "Password Don't Match", "warning");
+                    }
+                })
+        }
+
+
+
+    })
+
+</script>
+
+
+

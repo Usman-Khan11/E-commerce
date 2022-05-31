@@ -1,0 +1,148 @@
+﻿@model Shop_4_8_21.Models.Favourite
+@{
+    ViewBag.Title = "Favourite";
+}
+
+
+<style>
+    .cart-row {
+        padding: 15px 0;
+    }
+
+        .cart-row:nth-child(even) {
+            background: #efefef;
+        }
+
+    .product-name {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .product-options {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+        .product-options span {
+            color: #666;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+    .product-articlenr {
+        color: #666;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    .product-price small {
+        color: #666;
+        font-weight: 300;
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
+        line-height: initial;
+    }
+
+
+    .cart-table .cart-row i {
+        color: red !important;
+        padding: 9px 13px;
+        font-size: 18px;
+        border: 0;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+    .product-price-total {
+        font-size: 16px;
+        font-weight: 400;
+        width: 80%;
+        float: left;
+    }
+
+    .cart-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cart-special-holder {
+        background: #efefef;
+    }
+
+    .cart-special {
+        padding: 1em 1em 0;
+        display: block;
+        margin-top: 0.5em;
+        border-top: 1px solid #dadada;
+    }
+
+        .cart-special .cart-special-content:before {
+            content: "\21b3";
+            font-size: 1.5em;
+            margin-right: 1em;
+            color: #6f6f6f;
+            font-family: helvetica, arial, sans-serif;
+        }
+</style>
+
+
+@if (Model != null)
+{
+
+
+    <div class="container mb-5">
+        <h1 style="font-weight:bold" class="mt-5 text-center mb-4">Favourites</h1>
+        <div class="cart-table">
+
+
+            @foreach (var item in Model.MyFav)
+            {
+
+                <div class="row cart-row">
+                    <div class="col-xs-12 col-md-2">
+                        <img src="@Url.Content(item.images)" width="100%">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="product-articlenr">Id (#@item.p_id)</div>
+                        <div class="product-name"><a href="/Home/Product_View/@item.p_id">@item.p_name</a></div>
+                        <div class="product-price">
+                            @{
+                                if (item.featured == "yes")
+                                {
+                                    <small>Featured Product</small>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3 cart-actions">
+                        <div class="product-price-total">Rs @item.p_price/-</div>
+                        <div class="product-delete">
+                            <i class="fa fa-times-circle fav_delete" data-id="@item.p_id"></i>
+                        </div>
+                    </div>
+                </div><!-- cart-row-->
+
+            }
+        </div>
+     </div>
+
+       
+        }
+        else
+        {
+        <div class="mt-5 mb-5 container">
+            <h4 class="mb-3">Oops!</h4>
+            <h2 class="mb-3">No Products in Favourites</h2>
+            <a href="/Home/Index">Back to home <i class="fa fa-arrow-right ml-2 font-weight-lighter"></i> </a>
+        </div>
+        }
+
+
+
+
+
+
+
+

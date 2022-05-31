@@ -1,0 +1,559 @@
+﻿@model IEnumerable<Shop_4_8_21.Models.tbl_order>
+@using Shop_4_8_21.Models;
+
+@{
+    ViewBag.Title = "Your_Orders";
+    ShopEntities1 db = new ShopEntities1();
+}
+
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<style>
+    .cart-row {
+        padding: 15px 0;
+    }
+
+        .cart-row:nth-child(even) {
+            background: #efefef;
+        }
+
+    .product-name {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .product-options {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+        .product-options span {
+            color: #666;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+    .product-articlenr {
+        color: #666;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    .product-price small {
+        color: #666;
+        font-weight: 300;
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
+        line-height: initial;
+    }
+
+
+    .cart-table .cart-row i {
+        color: red !important;
+        padding: 9px 13px;
+        font-size: 18px;
+        border: 0;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+    .product-price-total {
+        font-size: 16px;
+        font-weight: 400;
+        width: 80%;
+        float: left;
+    }
+
+    .cart-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cart-special-holder {
+        background: #efefef;
+    }
+
+    .cart-special {
+        padding: 1em 1em 0;
+        display: block;
+        margin-top: 0.5em;
+        border-top: 1px solid #dadada;
+    }
+
+        .cart-special .cart-special-content:before {
+            content: "\21b3";
+            font-size: 1.5em;
+            margin-right: 1em;
+            color: #6f6f6f;
+            font-family: helvetica, arial, sans-serif;
+        }
+
+    a {
+        cursor: pointer;
+    }
+
+    .orders {
+        width: 90%;
+        margin: 0 auto;
+        height: 800px;
+        overflow-y: scroll;
+        margin-bottom: 40px;
+    }
+
+
+    .rating_sec{
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        z-index: 50;
+        background-color: linen;
+        width: 550px;
+        padding: 15px;
+        display:none;
+    }
+</style>
+
+
+<div class="rating_sec">
+    <div>
+
+        <div class="d-flex justify-content-between align-items-center my-3">
+            <div>
+                <i class="fa fa-star ratingstar" data-rating="1"></i>
+                <i class="fa fa-star ratingstar" data-rating="2"></i>
+                <i class="fa fa-star ratingstar" data-rating="3"></i>
+                <i class="fa fa-star ratingstar" data-rating="4"></i>
+                <i class="fa fa-star ratingstar" data-rating="5"></i>
+            </div>
+            <div>
+                <i class="fa fa-times fa-lg review_close"></i>
+            </div>
+
+        </div>
+        <input type="text" class="_msg" placeholder="Review" />
+        <br />
+        <button class="_btn mt-3 btn-block" data-value="id">ADD Rating</button>
+        <input type="hidden" class="star_value" />
+        <input type="hidden" class="P_id" />
+    </div>
+</div>
+
+
+<h1 style="font-weight:bold" class="mt-5 text-center mb-4">Orders</h1>
+
+@if (Model != null)
+{
+
+    <ul class="nav nav-pills mb-3 container" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">New Order</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Deleivered</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Canceled</a>
+        </li>
+    </ul>
+    <div class="tab-content orders" id="pills-tabContent">
+
+        @*FIRST TAB*@
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+            <div class="container-fluid">
+                <div class="cart-table">
+
+
+                    @foreach (var item in Model)
+                    {
+
+                        if (item.o_status == "Processing")
+                        {
+                            string[] List = item.o_items.Split(',');
+                            string[] q = item.quantity.Split(',');
+
+
+                            for (int i = 0; i < List.Length; i++)
+                            {
+                                int id = Convert.ToInt32(List[i]);
+                                var data = db.tbl_product.Where(x => x.p_id == id).SingleOrDefault();
+                                var a = data.p_price * Convert.ToInt32(q[i]);
+
+                                <div class="row cart-row">
+                                    <div class="col-xs-12 col-md-2">
+                                        <img src="@Url.Content(data.images)" width="100%">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="product-articlenr">Order Id (#@item.o_id)</div>
+                                        <div class="product-name"><a href="/Home/Product_View/@data.p_id">@data.p_name</a></div>
+                                        <div class="product-price">
+                                            <b>Rs <span>@data.p_price/-</span></b>
+                                            <br />
+                                            <span class="font-weight-500"><span class="text-danger">Status:</span> @item.o_status</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 cart-actions">
+                                        <div class="product-price-total">
+                                            <span>Total: Rs @a/-</span>
+                                            <span>Qty: @q[i]</span>
+                                        </div>
+                                        <div class="product-delete">
+                                            <a class="font-weight-500" data-toggle="modal" data-target="#O_@id">
+                                                View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div><!-- cart-row-->
+
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="O_@id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
+                                                <a class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </a>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div>
+                                                    <a href="#" class="btn btn-outline-warning mb-3">Write a Review</a>
+                                                </div>
+
+                                                <div>
+                                                    <h5>Details:-</h5>
+
+                                                    <div>
+                                                        <span>Qty: @q[i]</span>
+                                                        <br />
+                                                        <span>Placed On:- @item.o_date</span>
+                                                        <br />
+                                                        <span>Payment Method:- @item.o_payment</span>
+                                                        <br />
+                                                        <span>Sub Total:- Rs @a/-</span>
+                                                        <br />
+                                                        <span>Delivery Charges:- Rs 100/-</span>
+                                                        <br />
+                                                        <span>Total Amount:- Rs @{var t = a + 100; }@t/-</span>
+                                                        <br />
+                                                        <span>Status:- @item.o_status</span>
+                                                        <br />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+
+                    }
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+        @*SECOND TAB*@
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+            <div class="container-fluid">
+                <div class="cart-table">
+
+
+                    @foreach (var item in Model)
+                    {
+
+                        if (item.o_status == "Delivered")
+                        {
+                            string[] List = item.o_items.Split(',');
+                            string[] q = item.quantity.Split(',');
+
+
+                            for (int i = 0; i < List.Length; i++)
+                            {
+                                int id = Convert.ToInt32(List[i]);
+                                var data = db.tbl_product.Where(x => x.p_id == id).SingleOrDefault();
+                                var a = data.p_price * Convert.ToInt32(q[i]);
+
+                                <div class="row cart-row">
+                                    <div class="col-xs-12 col-md-2">
+                                        <img src="@Url.Content(data.images)" width="100%">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="product-articlenr">Order Id (#@item.o_id)</div>
+                                        <div class="product-name"><a href="/Home/Product_View/@data.p_id">@data.p_name</a></div>
+                                        <div class="product-price">
+                                            <b>Rs <span>@data.p_price/-</span></b>
+                                            <br />
+                                            <span class="font-weight-500"><span class="text-danger">Status:</span> @item.o_status</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 cart-actions">
+                                        <div class="product-price-total">
+                                            <span>Total: Rs @a/-</span>
+                                            <span>Qty: @q[i]</span>
+                                        </div>
+                                        <div class="product-delete">
+                                            <a class="font-weight-500" data-toggle="modal" data-target="#O_@id">
+                                                View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div><!-- cart-row-->
+
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="O_@id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
+                                                <a class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </a>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div>
+                                                    <a class="btn btn-outline-warning mb-3 review" data-value="@id">Write a Review</a>
+                                                </div>
+                                                <div>
+                                                    <h5>Details:-</h5>
+
+                                                    <div>
+                                                        <span>Qty: @q[i]</span>
+                                                        <br />
+                                                        <span>Placed On:- @item.o_date</span>
+                                                        <br />
+                                                        <span>Payment Method:- @item.o_payment</span>
+                                                        <br />
+                                                        <span>Sub Total:- Rs @a/-</span>
+                                                        <br />
+                                                        <span>Delivery Charges:- Rs 100/-</span>
+                                                        <br />
+                                                        <span>Total Amount:- Rs @{var t = a + 100; }@t/-</span>
+                                                        <br />
+                                                        <span>Status:- @item.o_status</span>
+                                                        <br />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                    }
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+        @*THIRD TAB*@
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+            <div class="container-fluid">
+                <div class="cart-table">
+
+
+                    @foreach (var item in Model)
+                    {
+
+                        if (item.o_status == "")
+                        {
+                            string[] List = item.o_items.Split(',');
+                            string[] q = item.quantity.Split(',');
+
+
+                            for (int i = 0; i < List.Length; i++)
+                            {
+                                int id = Convert.ToInt32(List[i]);
+                                var data = db.tbl_product.Where(x => x.p_id == id).SingleOrDefault();
+                                var a = data.p_price * Convert.ToInt32(q[i]);
+
+                                <div class="row cart-row">
+                                    <div class="col-xs-12 col-md-2">
+                                        <img src="@Url.Content(data.images)" width="100%">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="product-articlenr">Order Id (#@item.o_id)</div>
+                                        <div class="product-name"><a href="/Home/Product_View/@data.p_id">@data.p_name</a></div>
+                                        <div class="product-price">
+                                            <b>Rs <span>@data.p_price/-</span></b>
+                                            <br />
+                                            <span class="font-weight-500"><span class="text-danger">Status:</span> @item.o_status</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 cart-actions">
+                                        <div class="product-price-total">
+                                            <span>Total: Rs @a/-</span>
+                                            <span>Qty: @q[i]</span>
+                                        </div>
+                                        <div class="product-delete">
+                                            <a class="font-weight-500" data-toggle="modal" data-target="#O_@id">
+                                                View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div><!-- cart-row-->
+
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="O_@id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Order Details</h5>
+                                                <a class="close text-danger" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </a>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div>
+                                                    <a href="#" class="btn btn-outline-warning mb-3">Write a Review</a>
+                                                </div>
+
+                                                <div>
+                                                    <h5>Details:-</h5>
+
+                                                    <div>
+                                                        <span>Qty: @q[i]</span>
+                                                        <br />
+                                                        <span>Placed On:- @item.o_date</span>
+                                                        <br />
+                                                        <span>Payment Method:- @item.o_payment</span>
+                                                        <br />
+                                                        <span>Sub Total:- Rs @a/-</span>
+                                                        <br />
+                                                        <span>Delivery Charges:- Rs 100/-</span>
+                                                        <br />
+                                                        <span>Total Amount:- Rs @{var t = a + 100; }@t/-</span>
+                                                        <br />
+                                                        <span>Status:- @item.o_status</span>
+                                                        <br />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            }
+                        }
+
+
+
+                    }
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+}
+else
+{
+    <div class="mt-5 mb-5 container">
+        <h4 class="mb-3">Oops!</h4>
+        <h2 class="mb-3">ERROR</h2>
+        <a href="/Home/Index">Back to home <i class="fa fa-arrow-right ml-2 font-weight-lighter"></i> </a>
+    </div>
+}
+
+
+
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script>
+
+
+    $(".review").click(function () {
+        $(".modal").modal('hide');
+        $(".rating_sec").toggle();
+        $(".P_id").val($(this).attr("data-value"));
+    })
+
+
+    $(".ratingstar").hover(function () {
+        $(".ratingstar").removeClass("text-warning")
+        $(this).addClass("text-warning")
+        $(this).prevAll(".ratingstar").addClass("text-warning")
+        var num = $(this).attr("data-rating");
+        $(".star_value").val(num);
+        //alert($("#star_value").val())
+    })
+
+    $(".review_close").click(function () {
+        $(".rating_sec").toggle();
+    })
+
+    $("._btn").click(function () {
+        // alert($("#star_value").val())
+        var s = $(".star_value").val();
+        var c = $("._msg").val();
+        var i = $(".P_id").val();
+
+        if (s == "" || c == "" || i == "") {
+            return false;
+        }
+        else {
+
+            $.ajax({
+                url: "/Home/Rating",
+                type: 'POST',
+                data: { star: s, msg: c, id: i },
+                success: function (result) {
+                    if (result == 1) {
+                        swal("Done", "Review added successfully", "success");
+                        $("._msg").val("");
+                        $(".star_value").val("");
+                        $(".P_id").val("");
+                        $(".rating_sec").toggle();
+                    }
+
+                }
+            })
+        }
+
+    })
+</script>

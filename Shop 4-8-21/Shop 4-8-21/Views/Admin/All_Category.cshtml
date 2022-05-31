@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Shop_4_8_21.Models.tbl_category>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>All Categories</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+<body>
+
+
+    <button id="add_category" class="btn btn-outline-dark mt-3 mb-3 font-weight-bold px-4 py-2">Add New Category</button>
+
+
+    <table class="table">
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.c_name)
+                </td>
+                <td>
+                    <i class="fa fa-trash cat_delete text-danger" data-id="@item.c_id"></i>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+
+
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        $("#add_category").click(function () {
+            $.ajax({
+                url: "/Admin/Category",
+
+
+            })
+                .done(function (result) {
+                    $('#admin_container').html(result);
+                })
+        })
+
+        $(".cat_delete").click(function () {
+
+
+
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/Admin/Category_delete",
+                        data: {
+                            id: $(this).attr("data-id")
+                        },
+
+                    })
+                        .done(function (result) {
+                            $('#admin_container').html(result);
+                        })
+                }
+            })
+
+
+
+        })
+
+    </script>
+
+
+</body>
+</html>

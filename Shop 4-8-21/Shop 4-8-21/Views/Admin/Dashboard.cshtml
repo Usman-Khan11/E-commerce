@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+<body>
+
+
+
+    <div id="body">
+        <input type="checkbox" id="nav-toggle">
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <h1>
+                    <span>Shopistic</span>
+                </h1>
+            </div>
+
+            <div class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="/Admin/Dashboard" class="actived">
+                            <span class="fa fa-tachometer"></span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="user">
+                            <span class="fa fa-users"></span>
+                            <span>Customers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="product" class="text-whit">
+                            <span class="fa fa-product-hunt"></span>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="order">
+                            <span class="fa fa-shopping-cart"></span>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="category" class="text-whit">
+                            <span class="fa fa-life-bouy"></span>
+                            <span>Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="fa fa-user-circle"></span>
+                            <span>Accounts</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/Index" target="_blank">
+                            <span class="fa fa-tasks"></span>
+                            <span>View Website</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Logout">
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="main-content">
+            <header class="header">
+                <h2>
+                    <label for="nav-toggle">
+                        <span class="fa fa-bars"></span>
+                    </label>
+                    Dashboard
+                </h2>
+
+                <div class="search-wrapper">
+                    <span class="fa fa-search"> </span>
+                    <input type="search" placeholder="Search..." />
+
+                </div>
+
+                <div class="user-wrapper">
+                    <img src="https://bit.ly/3bvT89p" width="40px" height="40px" alt="profile-img">
+                    <div class="">
+                        <h4>@Session["Admin_name"]</h4>
+                        <small>Admin</small>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                
+
+                <div class="recent-gri">
+                    <div id="admin_container">
+
+                        @Html.Partial("_Dash")
+                    </div>
+
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+
+    <script>
+
+        $("#product").click(function () {
+            $.ajax({
+                url: "/Admin/All_Product",
+
+
+            })
+                .done(function (result) {
+                    $('#admin_container').html(result);
+                })
+        })
+
+        $("#category").click(function () {
+            $.ajax({
+                url: "/Admin/All_Category",
+
+
+            })
+                .done(function (result) {
+                    $('#admin_container').html(result);
+                })
+        })
+
+
+        $("#user").click(function () {
+            $.ajax({
+                url: "/Admin/All_Customers",
+
+
+            })
+                .done(function (result) {
+                    $('#admin_container').html(result);
+                })
+        })
+
+
+        $("#order").click(function () {
+            $.ajax({
+                url: "/Admin/Order",
+
+
+            })
+                .done(function (result) {
+                    $('#admin_container').html(result);
+                })
+        })
+
+
+
+        $(".sidebar-menu li a").click(function () {
+            $(".sidebar-menu li a").removeClass("actived")
+            $(this).addClass("actived")
+
+        })
+
+
+    </script>
+
+
+</body>
+</html>

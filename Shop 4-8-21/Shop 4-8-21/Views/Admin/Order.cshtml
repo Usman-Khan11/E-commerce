@@ -1,0 +1,225 @@
+﻿@model IEnumerable<Shop_4_8_21.Models.tbl_order>
+@using Shop_4_8_21.Models;
+@{
+    ShopEntities1 db = new ShopEntities1();
+}
+
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<style>
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        table caption {
+            font-size: 1.5em;
+            margin: .5em 0 .75em;
+        }
+
+        table tr {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: .35em;
+        }
+
+        table th,
+        table td {
+            padding: .625em;
+            text-align: center;
+        }
+
+        table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+    @@media screen and (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table caption {
+                font-size: 1.3em;
+            }
+
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+                table td::before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    span {
+        cursor: pointer;
+    }
+</style>
+
+
+
+<table class="container-md">
+    <thead>
+        <tr>
+            <th scope="col">Order Id</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Order Total</th>
+            <th scope="col">Payment</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string[] List = item.o_items.Split(',');
+            string[] qty = item.quantity.Split(',');
+            var delivery = List.Count() * 100;
+            var sub = item.o_total - delivery;
+
+
+            <tr>
+                <td scope="row" data-label="Order Id">@item.o_id</td>
+                <td data-label="Placed on Date">@item.o_date</td>
+                <td data-label="Order Amount">Rs @item.o_total/-</td>
+                <td data-label="Payment">@item.o_payment</td>
+
+                <td>
+                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#A_@item.o_id">
+                        View
+                    </button>
+                    <select class="form-control m-2 update_status" data-id="@item.o_id">
+                        <option selected disabled hidden>@item.o_status</option>
+                        <option>Delivered</option>
+                        <option>Pending</option>
+                        <option>Shipped</option>
+                        <option>Packed</option>
+                    </select>
+                </td>
+            </tr>
+
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="A_@item.o_id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <h5 class="text-center mb-4">Products</h5>
+
+                            <div class="row">
+                                @for (int i = 0; i < List.Length; i++)
+                                {
+                                    int id = Convert.ToInt32(List[i]);
+                                    var data = db.tbl_product.Where(x => x.p_id == id).SingleOrDefault();
+                                    var price = data.p_price * Convert.ToInt32(qty[i]);
+
+                                    <div class="col-md-4 col-sm-6 col-6">
+                                        <div class="border mb-3">
+                                            <img src="@Url.Content(data.images)" width="100%" height="100px" />
+                                            <br />
+                                            <small class="mt-1">
+                                                <a href="/Home/Product_View/@data.p_id" target="_blank" class="text-dark                    text-decoration-none">@data.p_name</a>
+                                            </small>
+                                            <div>
+                                                <small>Qty: @qty[i]</small>
+                                                <br />
+                                                <strong>Rs @price/-</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            </div>
+                            <br />
+                            <div>
+                                <h5>Details:-</h5>
+
+                                <div>
+                                    <span>Sub Total:- Rs @sub/-</span>
+                                    <br />
+                                    <span>Delivery Charges:- Rs @delivery/-</span>
+                                    <br />
+                                    <span>Total Amount:- Rs @item.o_total/-</span>
+                                    <br />
+                                    <span>Status:- @item.o_status</span>
+                                    <br />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        }
+
+    </tbody>
+</table>
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(".update_status").change(function () {
+        var v = $(this).children("option:selected").val();
+        $.ajax({
+            url: "/Admin/Order_Update",
+            type: 'POST',
+            cache: false,
+            data: { status: v, id: $(this).attr("data-id") },
+            success: function (result) {
+                $('#admin_container').html(result);
+                swal("Done", "Update Successfully", "success");
+
+            }
+        });
+
+    })
+
+
+</script>
+
+

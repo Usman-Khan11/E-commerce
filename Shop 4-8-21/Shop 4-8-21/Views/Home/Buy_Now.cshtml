@@ -1,0 +1,24 @@
+﻿@model Shop_4_8_21.Models.tbl_product
+
+@{
+    ViewBag.Title = "Buy_Now";
+}
+
+
+<h2>@ViewBag.price</h2>
+
+
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div>
+                    <img src="@Url.Content(Model.images)" alt="Alternate Text" width="100%"  height="455px" />
+                    <h3>@Model.p_name</h3>
+                    <b>Rs @Model.p_price /-</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

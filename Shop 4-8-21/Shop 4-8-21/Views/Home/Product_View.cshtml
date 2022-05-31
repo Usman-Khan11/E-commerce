@@ -1,0 +1,417 @@
+﻿@model Shop_4_8_21.Models.tbl_product
+@using Shop_4_8_21.Models;
+
+@{
+    ViewBag.Title = "Product_View";
+}
+@{
+    ShopEntities1 db = new ShopEntities1();
+    var Data = (IEnumerable<tbl_product>)TempData["Related_Product"];
+    var rating = (IEnumerable<tbl_rating>)TempData["Rating"];
+}
+
+<section class="flat-row main-shop shop-detail style-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                @if (Model.images != null)
+                {
+                    <img src="@Url.Content(Model.images)" width="100%" style="height:500px !important;" />
+                }
+                else
+                {
+                    <img src="https://images.unsplash.com/photo-1487088678257-3a541e6e3922?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=967&q=80" alt="Alternate Text" />
+                }
+
+            </div><!-- /.col-md-6 -->
+
+            <div class="col-md-6">
+                    <div class="divider h0"></div>
+                    <div class="product-detail">
+                        <div class="inner">
+                            <div class="content-detail">
+                                <h2 class="product-title">@Model.p_name</h2>
+                                <div class="flat-star style-1">
+                                    @if (TempData["Percentage"] != null)
+                                    {
+                                        double a = Convert.ToDouble(TempData["Percentage"]);
+                                        if (a > 0 && a <= 20)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (a > 20 && a <= 40)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (a > 40 && a <= 60)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (a > 60 || a <= 80)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (a > 80 && a <= 100)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star "></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+
+                                    }
+
+                                    <span>0</span>
+                                </div>
+
+                                <div class="price margin-top-30">
+                                    <ins class="no-padding"><span class="amount">Rs @Model.p_price /-</span></ins>
+                                </div>
+                                <div class="product-quantity margin-top-44">
+\\                                    <div class="add-to-cart text-center">
+                                        @if (Session["u_id"] == null)
+                                        {
+                                            <a>ADD TO CART</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="Add" data-id="@Model.p_id">ADD TO CART</a>
+                                        }
+                                    </div>
+                                    
+                                      <div class="box-like">
+                                          @{
+                                              var fav = Request.Cookies["favProducts"];
+
+                                              if (fav != null)
+                                              {
+                                                  if (fav.Value.Contains(Model.p_id.ToString()))
+                                                  {
+                                                      <a class="like fav_delete" data-id="@Model.p_id"><i class="fa fa-heart text-danger"></i></a>
+
+                                                  }
+                                                  else
+                                                  {
+                                                      <a class="like favs" data-id="@Model.p_id"><i class="fa fa-heart-o"></i></a>
+
+                                                  }
+                                              }
+                                              else
+                                              {
+                                                  <a class="like favs" data-id="@Model.p_id"><i class="fa fa-heart-o"></i></a>
+                                              }
+
+
+
+
+                                          }
+                                      </div>
+                                </div>
+                                <ul class="product-infor style-1 margin-top-32">
+                                    <li><span>100% cotton</span></li>
+                                    <li><span>6 months warranty</span></li>
+                                    <li><span>Free Shipping</span></li>
+                                    <li><span>High Quality</span></li>
+                                </ul>
+                                <div class="product-categories margin-top-22">
+                                    @{
+                                        var cat_name = db.tbl_category.Where(x => x.c_id == Model.cat_fk).SingleOrDefault();
+                                    }
+                                    <span class="font-weight-500">Category:</span> @cat_name.c_name
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div><!-- /.product-detail -->
+            </div>
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section><!-- /.flat-row -->
+
+<section class="flat-row shop-detail-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="flat-tabs style-1 has-border">
+                    <div class="inner">
+                        <ul class="menu-tab">
+                            <li class="active">Description</li>
+                            <li>Reviews</li>
+                        </ul>
+                        <div class="content-tab">
+                            <div class="content-inner">
+                                <div class="inner max-width-77 padding-top-33 padding-left-7">
+                                    <p>Fashion has always been so temporary and uncertain. You can’t keep up with it.  This social phenomenon is very whimsical, thus we as the consumers always try to stay in touch with all the latest fashion tendencies. Obviously there is nothing wrong about it because fashion satisfies our willingness to be attractive. And also fashion is the detector of prosperity and social rank. So, our natural desire to wear fashionable clothes has many reasons such as historical, social and others. Therefore being fashionable costs a lot of money. But nowadays fashion is not such unavailable as it was a couple of centuries ago. We are lucky to have an opportunity to buy qualitative, fashionable and affordable clothes.</p>
+                                    <p class="margin-top-11 line-height-24">So, with the great pleasure we are offering you our goods, and we are sure that only our choices of garments will suit you best. Our product is universal because it suits different customers with different demands. We assure you it is really important, it shows that our good has such capacity as flexibility. And it is good for you because as we all know people change their claims with the course of time, and our good will be actual for a long time. The main reason of buying our clothes is the unique combination of fair price, extraordinary style and perfect quality.  Here you can find garments of all sizes, colors, styles and fabrics.</p>
+                                </div>
+                            </div><!-- /.content-inner -->
+                            <div class="content-inner">
+                                <div class="inner max-width-83 padding-top-33">
+                                    <ol class="review-list">
+                                        @if (rating != null)
+                                        {
+                                            foreach (var item in rating)
+                                            {
+
+                                                <li class="review">
+                                                    <div class="thumb">
+                                                        <img src="images/avatar-1.png" alt="Image">
+                                                    </div>
+                                                    <div class="text-wrap">
+                                                        <div class="review-meta">
+                                                            @{
+                                                                var u = db.tbl_user.Where(x => x.u_id == item.user_id_fk).SingleOrDefault();
+                                                                var r = 5 - item.rating;
+                                                                var s = Convert.ToInt32(item.rating);
+                                                            }
+                                                            <h5 class="name">@u.u_name</h5>
+                                                            <div class="flat-star style-1">
+
+                                                                @for (int j = 0; j < s; j++)
+                                                                {
+                                                                    <i class="fa fa-star"></i>
+                                                                }
+                                                                @for (int i = 0; i < r; i++)
+                                                                {
+                                                                    <i class="fa fa-star text-dark"></i>
+                                                                }
+       
+                                                            </div>
+                                                        </div>
+                                                        <div class="review-text">
+                                                            <p>@item.comment</p>
+                                                        </div>
+                                                    </div>
+                                                </li><!--  /.review    -->
+                                            }
+                                        }
+                                        else
+                                        {
+                                          <h6>No Review Found</h6>
+                                        }
+                                    </ol><!-- /.review-list -->
+                                    <div class="comment-respond review-respond" id="respond">
+
+                                    </div><!-- /.comment-respond -->
+                                </div>
+                            </div><!-- /.content-inner -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- /.shop-detail-content -->
+
+<section class="flat-row shop-related">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-section margin-bottom-55">
+                    <h2 class="title">Related Products</h2>
+                </div>
+
+                <div class="product-content product-fourcolumn clearfix">
+                    <ul class="product style2">
+
+                        @foreach (var item in Data.Take(4))
+                        {
+
+
+                        <li class="product-item mb-5">
+                            <div class="product-thumb clearfix">
+                                <a href="/Home/Product_View/@item.p_id" class="product-thumb">
+                                    <img src="@Url.Content(item.images)" width="90%" alt="image" style="height: 180px !important;">
+                                </a>
+                            </div>
+                            <div class="product-info text-center clearfix mt-3">
+                                <span class="product-title">@item.p_name</span>
+                                <div class="price">
+                                    <ins>
+                                        <span class="amount">Rs @item.p_price /-</span>
+                                    </ins>
+                                </div>
+                                <div class="flat-star style-1">
+                                    @{
+                                        //ShopEntities1 db = new ShopEntities1();
+                                        var data = db.tbl_rating.Where(x => x.pro_id_fk == item.p_id).ToList();
+                                        double i = Convert.ToDouble(data.Sum(x => x.rating));
+                                        double c = data.Count();
+
+                                        double total_rating = i / c;
+                                        double per = total_rating / 5 * 100;
+
+                                        if (per > 0 && per <= 20)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (per > 20 && per <= 40)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (per > 40 && per <= 60)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (per > 60 || per <= 80)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+                                        else if (per > 80 && per <= 100)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star "></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                            <i class="fa fa-star text-dark"></i>
+                                        }
+
+                                    }
+                                </div>
+                                <ul class="flat-color-list width-14">
+                                    @{
+
+                                        var catname = db.tbl_category.Where(x => x.c_id == item.cat_fk).SingleOrDefault();
+                                    }
+                                    <li>
+                                        <span class="font-weight-500">Category:</span> @catname.c_name
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="add-to-cart text-center">
+                                @if (Session["u_id"] == null)
+                                {
+                                    <a>ADD TO CART</a>
+                                }
+                                else
+                                {
+                                    <a class="Add" data-id="@item.p_id">ADD TO CART</a>
+                                }
+                            </div>
+                            @{
+                                //var favs = Request.Cookies["favProducts"];
+
+                                if (fav != null)
+                                {
+                                    if (fav.Value.Contains(item.p_id.ToString()))
+                                    {
+                                        <a class="like fav_delete" data-id="@item.p_id"><i class="fa fa-heart text-danger"></i></a>
+
+                                    }
+                                    else
+                                    {
+                                        <a class="like favs" data-id="@item.p_id"><i class="fa fa-heart-o"></i></a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <a class="like favs" data-id="@item.p_id"><i class="fa fa-heart-o"></i></a>
+                                }
+
+
+
+
+                            }
+                        </li>
+
+                        }
+
+                    </ul><!-- /.product -->
+                </div><!-- /.product-content -->
+            </div>
+        </div><!-- /.row -->
+    </div>
+</section>
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script>
+    var flatTabs = function () {
+        $('.flat-tabs').each(function () {
+            $(this).find('.content-tab').children().hide();
+            $(this).find('.content-tab').children().first().show();
+            $(this).find('.menu-tab').children('li').on('click', function () {
+                var liActive = $(this).index();
+                var contentActive = $(this).siblings().removeClass('active').parents('.flat-tabs').find('.content-tab').children().eq(liActive);
+                contentActive.addClass('active').fadeIn("slow");
+                contentActive.siblings().removeClass('active');
+                $(this).addClass('active').parents('.flat-tabs').find('.content-tab').children().eq(liActive).siblings().hide();
+            });
+        });
+    };
+
+    var quantityNumber = function () {
+        $('.quantity-button').on('click', function () {
+            var numberValue = $(this).parent().find('.quantity-number').val();
+
+            if ($(this).text() == "+") {
+                var newVal = parseFloat(numberValue) + 1;
+            } else {
+                if (numberValue > 0) {
+                    var newVal = parseFloat(numberValue) - 1;
+                } else {
+                    newVal = 0;
+                }
+            }
+
+            $(this).parent().find('.quantity-number').val(newVal);
+
+
+        });
+    };
+
+    flatTabs();
+    quantityNumber();
+</script>

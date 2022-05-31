@@ -1,0 +1,242 @@
+﻿@model Shop_4_8_21.Models.Cart
+
+@{
+    ViewBag.Title = "Add_To_Cart";
+}
+
+
+
+
+<style>
+
+
+
+
+    /* cart items */
+
+    .cart-page {
+        margin: 50px auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .cart-info {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    th {
+        text-align: left;
+        padding: 5px;
+        color: #ffffff;
+        background: #f63440;
+        font-weight: normal;
+    }
+
+    td {
+        padding: 10px 5px;
+    }
+
+        td input {
+            width: 40px;
+            height: 30px;
+            padding: 5px;
+        }
+
+        td a {
+            color: #ff523b;
+            font-size: 12px;
+        }
+
+        td img {
+            width: 100px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+    .total-price {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+        .total-price table {
+            border-top: 3px solid #f63440;
+            width: 100%;
+            max-width: 400px;
+        }
+
+    td:last-child {
+        text-align: right;
+    }
+
+    th:last-child {
+        text-align: right;
+    }
+
+    .btn_checkout {
+        background: #f63440;
+        color: white;
+    }
+
+
+    .checkout {
+        width:90%;
+        height:600px;
+        background-color:white;
+        position:fixed;
+        top:15%;
+        left:0;
+        right:0;
+        bottom:20% !important;
+        z-index:999;
+        margin:0 auto !important;
+        padding: 20px;
+        display:none;
+        border-radius: 15px;
+    }
+    @@media (max-width:800px) {
+        .checkout {
+            height: 800px !important;
+            top: 10%;
+        }
+    }
+
+    .remove{
+        cursor: pointer;
+    }
+
+</style>
+
+
+
+<!-- cart items details -->
+
+
+
+@if (Model != null && Model.MyCart.Count() > 0)
+{
+    
+
+    <div class="container cart-page">
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+
+            @foreach (var item in Model.MyCart)
+            {
+
+
+                var qty = Model.ProductId.Where(x => x == item.p_id).Count();
+                var t = item.p_price * qty;
+            <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="@Url.Content(item.images)" alt="" />
+                        <div>
+                            <p>@item.p_name</p>
+                            <small>Rs @item.p_price /-</small>
+                            <br />
+                            <a class="remove" data-id="@item.p_id">Remove</a>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="p-2 bg-light px-4">@qty</span></td>
+                <td> Rs @t /-</td>
+            </tr>
+            }
+        </table>
+        <br /><br />
+        @{ 
+            var subtotal = Model.MyCart.Sum(x => x.p_price * Model.ProductId.Where(p => p == x.p_id).Count());
+            var tax = Model.MyCart.Count() * 100;
+            var total = subtotal + tax;
+            TempData["Total"] = total;
+        }
+
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>Rs @subtotal /-</td>
+                </tr>
+                <tr>
+                    <td>Shipping Charges</td>
+                    <td> RS @tax /-</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>Rs @total /-</td>
+                </tr>
+            </table>
+
+        </div>
+        <a class="btn_checkout btn-block btn">Checkout</a>
+    </div>
+
+    <div class="checkout shadow border">
+        <i class="fa fa-times fa-lg mb-3 text-danger cross"></i>
+        <div class="container">
+            <h2 class="font-weight-bold text-center mb-5">Order Details</h2>
+            <div class="row">
+
+                <div class="col-md-8">
+                    <div class="mb-4">
+                        <h5>Total Products: @Model.MyCart.Count()</h5>
+                        <br />
+                        <h5>Total Bill: Rs @total/-</h5>
+                        <h5>Delivery Charges: Rs @tax/-</h5>
+
+                        <div>
+                            <h3 class="mt-4">Payment Type</h3>
+                            <br />
+                            <form>
+                                <input type="hidden" name="name" value="@total" />
+                                <input type="radio" name="pay" /> <small>Cash on Delivery</small>
+                                <br />
+                                <input type="radio" name="pay" /> <small>Paypal</small>
+                            </form>
+                            
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div>
+                        <input type="text" class="form-control" readonly value="@Session["u_name"]" />
+                        <input type="text" class="form-control mt-4 mb-4" readonly value="@Session["u_address"]" />
+                        <input type="text" class="form-control mt-4 mb-4" readonly value="@Session["u_contact"]" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+                <button class="btn-block py-2" id="Order">Order Now</button>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+
+
+else
+{
+<div class="mt-5 mb-5 container">
+    <h4 class="mb-3">Oops!</h4>
+    <h2 class="mb-3">No Products in Cart</h2>
+    <a href="/Home/Index">Continue Shopping <i class="fa fa-arrow-right ml-2 font-weight-lighter"></i> </a>
+</div>
+}
+
+
+
+

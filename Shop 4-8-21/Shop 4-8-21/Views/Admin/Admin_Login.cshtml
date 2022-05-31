@@ -1,0 +1,82 @@
+﻿@model Shop_4_8_21.Models.tbl_admin
+
+@{
+    ViewBag.Title = "Admin_Login";
+    Layout = null;
+}
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+
+<div style="background-color: #181828;">
+    <header class="top-header">
+    </header>
+
+    <div id="mainCoantiner">
+        <div class="main-header">
+            <div class="headersocial">
+                @*<ul>
+                    <li><a id="nmberone">1</a></li>
+                    <li><a id="nmbertwo">2</a></li>
+                    <li><a id="numberthree">3</a></li>
+                    <li><a>4</a></li>
+                </ul>*@
+            </div>
+            <div class="folio-btn">
+                <a class="folio-btn-item ajax" href="/Home/Index" target="_blank"><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span><span class="folio-btn-dot"></span></a>
+            </div>
+        </div>
+
+        <!--dust particel-->
+        <div>
+            <div class="starsec"></div>
+            <div class="starthird"></div>
+            <div class="starfourth"></div>
+            <div class="starfifth"></div>
+        </div>
+        <!--Dust particle end--->
+
+        <div class="container text-center text-dark mt-5">
+            <div class="row">
+                <div class="col-lg-4 d-block mx-auto mt-5">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-md-12">
+                            <div class="card">
+                                <div class="card-body wow-bg" id="formBg">
+                                    <h3 class="colorboard">Login</h3>
+
+                                    <p class="text-muted">Sign In to your account</p>
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                        <div class="input-group mb-3">
+                                            @Html.EditorFor(model => model.a_email, new { htmlAttributes = new { @class = "form-control textbox-dg", @Placeholder = "Email" } })
+                                            @Html.ValidationMessageFor(model => model.a_email, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="input-group mb-4">
+                                            @Html.PasswordFor(model => model.a_password, new { @class = "form-control textbox-dg", @Placeholder = "Password" })
+                                            @Html.ValidationMessageFor(model => model.a_password, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12"> <button type="submit" class="btn btn-primary btn-block logn-btn">Login</button> </div>
+                                            <div class="col-12"> <a href="forgot-password.html" class="btn btn-link box-shadow-0 px-0">Forgot password?</a> </div>
+                                        </div>
+                                    }
+                                    <div class="mt-6 btn-list">
+                                        <button type="button" class="socila-btn btn btn-icon btn-facebook fb-color"><i class="fa fa-facebook-f faa-ring animated"></i></button> <button type="button" class="socila-btn btn btn-icon btn-google incolor"><i class="fa fa-linkedin faa-flash animated"></i></button> <button type="button" class="socila-btn btn btn-icon btn-twitter tweetcolor"><i class="fa fa-twitter faa-shake animated"></i></button> <button type="button" class="socila-btn btn btn-icon btn-dribbble driblecolor"><i class="fa fa-dribbble faa-pulse animated"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>

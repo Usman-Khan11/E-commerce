@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d526a20785a34fc096dd91873924787b" Name="Diagram1">
+        <EntityTypeShape EntityType="ShopModel.tbl_admin" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopModel.tbl_banner" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopModel.tbl_category" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopModel.tbl_order" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopModel.tbl_product" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopModel.tbl_user" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="ShopModel.FK__tbl_produ__cat_f__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopModel.FK__tbl_order__u_fk__412EB0B6" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ShopModel.tbl_rating" Width="1.5" PointX="5.25" PointY="6.25" />
+        <AssociationConnector Association="ShopModel.FK__tbl_ratin__pro_i__4AB81AF0" />
+        <AssociationConnector Association="ShopModel.FK__tbl_ratin__user___49C3F6B7" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

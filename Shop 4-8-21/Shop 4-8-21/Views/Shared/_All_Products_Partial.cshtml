@@ -1,0 +1,146 @@
+﻿@model Shop_4_8_21.Models.Pro
+@using Shop_4_8_21.Models;
+
+@{
+    ShopEntities1 db = new ShopEntities1();
+}
+
+
+@foreach (var item in Model.Products)
+{
+
+
+    <li class="product-item">
+        <div class="product-thumb clearfix">
+            <a href="/Home/Product_View/@item.p_id" class="product-thumb">
+                <img src="@Url.Content(item.images)" width="90%" style="height: 180px !important;">
+            </a>
+            @{
+                if (item.featured == "yes")
+                {
+                    <span class="new">Featured</span>
+                }
+
+            }
+        </div>
+        <div class="product-info clearfix mt-3">
+            <span class="product-title">@item.p_name</span>
+            <div class="price">
+
+                <ins>
+                    <span class="amount">Rs @item.p_price /-</span>
+                </ins>
+            </div>
+            <ul class="flat-star">
+                @{
+                    var data = db.tbl_rating.Where(x => x.pro_id_fk == item.p_id).ToList();
+                    double i = Convert.ToDouble(data.Sum(x => x.rating));
+                    double c = data.Count();
+
+                    double total_rating = i / c;
+                    double per = total_rating / 5 * 100;
+
+                    if (per > 0 && per <= 20)
+                    {
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                    }
+                    else if (per > 20 && per <= 40)
+                    {
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                    }
+                    else if (per > 40 && per <= 60)
+                    {
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                    }
+                    else if (per > 60 || per <= 80)
+                    {
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star text-dark"></i>
+                    }
+                    else if (per > 80 && per <= 100)
+                    {
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star "></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                        <i class="fa fa-star text-dark"></i>
+                    }
+
+                }
+
+            </ul>
+            <ul class="flat-color-list width-14">
+                @{
+                    var cat_name = db.tbl_category.Where(x => x.c_id == item.cat_fk).SingleOrDefault();
+                }
+                <li>
+                    <span class="font-weight-500">Category:</span> @cat_name.c_name
+                </li>
+
+            </ul>
+        </div>
+        <div class="add-to-cart text-center">
+            @if (Session["u_id"] == null)
+            {
+                <a>ADD TO CART</a>
+            }
+            else
+            {
+                <a class="Add" data-id="@item.p_id">ADD TO CART</a>
+            }
+        </div>
+        @{
+            var fav = Request.Cookies["favProducts"];
+
+            if (fav != null)
+            {
+                if (fav.Value.Contains(item.p_id.ToString()))
+                {
+                    <a class="like fav_delete" data-id="@item.p_id"><i class="fa fa-heart text-danger"></i></a>
+
+                }
+                else
+                {
+                    <a class="like favs" data-id="@item.p_id"><i class="fa fa-heart-o"></i></a>
+
+                }
+            }
+            else
+            {
+                <a class="like favs" data-id="@item.p_id"><i class="fa fa-heart-o"></i></a>
+            }
+
+
+
+
+        }
+    </li>
+
+
+
+
+}
+

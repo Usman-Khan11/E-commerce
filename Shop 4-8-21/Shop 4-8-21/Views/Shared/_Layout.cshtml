@@ -1,0 +1,612 @@
+﻿@using Shop_4_8_21.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/animate.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/colors/color1.css" rel="stylesheet" />
+    <link href="~/Content/responsive.css" rel="stylesheet" />
+    <link href="~/Content/owl.carousel.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/Slick/slick.css" rel="stylesheet" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+</head>
+
+<style>
+
+    .md {
+        display: none !important;
+    }
+
+    .logo {
+        font-size: 65px;
+        font-family: "Silver Crown",sans-serif !important;
+        transition: all .3s;
+    }
+
+        .logo:hover {
+            color: #f63440;
+        }
+
+    
+    @@media (max-width: 1000px){
+        .md{
+            display: block !important;
+        }
+        .logo {
+            font-size: 35px !important;
+            font-family: "Silver Crown",sans-serif !important;
+        }
+    }
+
+    
+
+</style>
+
+<body class="header_sticky header-style-1 has-menu-extra">
+
+    <!-- Preloader -->
+    @*<div id="loading-overlay">
+        <div class="loader"></div>
+    </div>*@
+
+    <!-- Boxed -->
+    <div class="boxe">
+        <div id="site-header-wrap">
+            <!-- Header -->
+            <header id="header" class="header header-container clearfix">
+                <div class="container clearfix" id="site-header-inner">
+                    <div id="logo" class="logo float-left">
+                        <a href="/Home/Index" title="Shopistic Online Shopping">
+                            <h1 class="logo">Shopistic</h1>
+                        </a>
+                    </div><!-- /.logo -->
+                    <div class="mobile-button"><span></span></div>
+                    <ul class="menu-extra">
+                        <li class="box-search">
+                            <a class="icon_search header-search-icon"></a>
+                            <form method="get" action="/Home/All_Products" class="header-search-form">
+                                <input type="text" id="search" name="search" autocomplete="off" class="header-search-field" placeholder="Search...">
+                            </form>
+                        </li>
+                        <li class="box-cart nav-top-cart-wrapper">
+                            <a class="icon_logi nav-cart-trigger"><i class="fa fa-user"></i></a>
+                            <div class="nav-shop-cart">
+                                <div class="widget_shopping_cart_content">
+                                    <div class="woocommerce-min-cart-wrap">
+                                        <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                            @if (Session["u_id"] == null)
+                                            {
+                                                <li class="woocommerce-mini-cart-item mini_cart_item">
+                                                    <a href="/User/User_Login">Login</a>
+                                                </li>
+                                                <li class="woocommerce-mini-cart-item mini_cart_item">
+                                                    <a href="/User/User_Signup">Signup</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                int a = Convert.ToInt32(Session["u_id"]);
+                                                <li class="woocommerce-mini-cart-item mini_cart_item">
+                                                    <a href="/User/User_Profile/@a">Profile</a>
+                                                </li>
+                                                <li class="woocommerce-mini-cart-item mini_cart_item">
+                                                    <a href="/User/Logout">Logout</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </div><!-- /.widget_shopping_cart_content -->
+                                </div>
+                            </div><!-- /.nav-shop-cart -->
+                        </li>
+                        <li class="box-cart nav-top-cart-wrapper">
+                            <a class="icon_cart nav-cart-trigger active" href="/Home/Add_To_Cart"><span id="cartCount">0</span></a>
+                            <div class="nav-shop-cart">
+                                <div class="widget_shopping_cart_content">
+                                    @*<div class="woocommerce-min-cart-wrap">
+                                        <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                            <li class="woocommerce-mini-cart-item mini_cart_item">
+                                                <span>No Items in Shopping Cart</span>
+                                            </li>
+                                        </ul>
+                                    </div>*@
+                                </div>
+                            </div><!-- /.nav-shop-cart -->
+                        </li>
+                    </ul><!-- /.menu-extra -->
+                    <div class="nav-wrap">
+                        <nav id="mainnav" class="mainnav">
+                            <ul class="menu">
+                                <li class="">
+                                    <a href="/Home/Index">Home</a>
+
+                                </li>
+                                <li>
+                                    <a href="/Home/All_Products">All Products</a>
+                                </li>
+                                <li>
+                                    <a href="#">Categories</a>
+                                    <ul class="submenu">
+                                        @{
+                                            ShopEntities1 db = new ShopEntities1();
+                                            List<tbl_category> p = db.tbl_category.ToList();
+
+                                            foreach (var item in p)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink(
+                                                    item.c_name,
+                                                    "All_Products",
+                                                    "Home",
+                                                    new { Category = item.c_name },
+                                                    null
+                                                    )
+                                                </li>
+                                            }
+                                        }
+
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/Home/Favourite">Favourites</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/Your_Orders">Orders</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/Contact">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="/Home/Add_To_Cart" class="md"><i class="fa fa-shopping-cart fa-2x"></i></a>
+                                </li>
+                                @if (Session["u_id"] == null)
+                                {
+                                    <li class="woocommerce-mini-cart-item mini_cart_item md">
+                                        <a href="/User/User_Login">Login</a>
+                                    </li>
+                                    <li class="woocommerce-mini-cart-item mini_cart_item md">
+                                        <a href="/User/User_Signup">Signup</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    int a = Convert.ToInt32(Session["u_id"]);
+                                    <li class="woocommerce-mini-cart-item mini_cart_item md">
+                                        <a href="/User/User_Profile/@a">Profile</a>
+                                    </li>
+                                    <li class="woocommerce-mini-cart-item mini_cart_item md">
+                                        <a href="/User/Logout">Logout</a>
+                                    </li>
+                                }
+
+
+                            </ul>
+                        </nav><!-- /.mainnav -->
+                    </div><!-- /.nav-wrap -->
+                </div><!-- /.container-fluid -->
+            </header><!-- /header -->
+        </div><!-- /#site-header-wrap -->
+    </div>
+
+
+
+    <div>
+        @RenderBody()
+    </div>
+
+
+
+    <section class="flat-row mail-chimp">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text">
+                        <h3>Sign up for Send Newsletter</h3>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="subscribe clearfix">
+                        <form action="#" method="post" accept-charset="utf-8" id="subscribe-form">
+                            <div class="subscribe-content">
+                                <div class="input">
+                                    <input type="email" name="subscribe-email" placeholder="Your Email">
+                                </div>
+                                <div class="button">
+                                    <button type="button">SUBCRIBE</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div><!-- /.subscribe -->
+                </div>
+            </div>
+        </div>
+    </section><!-- /.mail-chimp -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="widget widget-link">
+                        <ul>
+                            <li><a href="/Home/All_Products">All Products</a></li>
+                            <li><a href="#"></a></li>
+                            <li><a href="/Home/Contact">Contact Us</a></li>
+                        </ul>
+                        <ul class="flat-social mt-3">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google"></i></a></li>
+                            <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                        </ul><!-- /.flat-social -->
+                    </div><!-- /.widget -->
+                </div><!-- /.col-md-3 -->
+                <div class="col-sm-6 col-md-3">
+                    <div class="widget widget-link link-login">
+                        <ul>
+                            <li><a href="/User/User_Login">Login/ Register</a></li>
+                            <li><a href="/Home/Add_To_Cart">Your Cart</a></li>
+                            <li><a href="/Home/Favourite">Wishlist items</a></li>
+                        </ul>
+                    </div><!-- /.widget -->
+                </div><!-- /.col-md-3 -->
+                <div class="col-sm-6 col-md-3">
+                    <div class="widget widget-link link-faq">
+                        <ul>
+                            <li><a href="#">FAQs</a></li>
+                            <li><a href="#">Term of service</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Returns</a></li>
+                        </ul>
+                    </div><!-- /.widget -->
+                </div><!-- /.col-md-3 -->
+                <div class="col-sm-6 col-md-3">
+                    <div class="widget widget-brand">
+                        <div class="mb-3">
+                            <a href="/Home/Index" title="Shopistic Online Shopping">
+                                <h1 class="logo">Shopistic</h1>
+                            </a>
+                        </div>
+                        <ul class="flat-contact">
+                            <li class="address">112 Kingdom, NA 12, New York</li>
+                            <li class="phone">+12 345 678 910</li>
+                            <li class="email">infor.deercreative@gmail.com</li>
+                        </ul><!-- /.flat-contact -->
+                    </div><!-- /.widget -->
+                </div><!-- /.col-md-3 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </footer><!-- /.footer -->
+
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="copyright text-center">
+                        <i class="fa fa-copyright"></i> <span id="year"></span> Shopistic. All Rights Reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a class="go-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+
+
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/tether.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.easing.js"></script>
+    <script src="~/Scripts/parallax.js"></script>
+    <script src="~/Scripts/jquery-waypoints.js"></script>
+    <script src="~/Scripts/jquery-countTo.js"></script>
+    <script src="~/Scripts/jquery.countdown.js"></script>
+    <script src="~/Scripts/jquery.flexslider-min.js"></script>
+    <script src="~/Scripts/images-loaded.js"></script>
+    <script src="~/Scripts/jquery.isotope.min.js"></script>
+    <script src="~/Scripts/magnific.popup.min.js"></script>
+    <script src="~/Scripts/jquery.hoverdir.js"></script>
+    <script src="~/Scripts/owl.carousel.min.js"></script>
+    <script src="~/Scripts/equalize.min.js"></script>
+    <script src="~/Scripts/gmap3.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+
+
+    <script src="~/Content/rev-slider/js/jquery.themepunch.tools.min.js"></script>
+    <script src="~/Content/rev-slider/js/jquery.themepunch.revolution.min.js"></script>
+    <script src="~/Scripts/rev-slider.js"></script>
+    <script src="~/Scripts/Slick/slick.min.js"></script>
+    <script src="~/Scripts/main.js"></script>
+    <script src="~/Scripts/Website.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            $('.menu li a').each(function () {
+                if ($(this).attr('href') == window.location.pathname) $(this).parent().addClass('active');
+
+
+            })
+
+
+            var products;
+            $(".Add").click(function () {
+                var existingCookieData = $.cookie('CartProducts');
+
+                if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+                    products = existingCookieData.split('-');
+                }
+                else {
+                    products = [];
+                }
+
+                var id = $(this).attr("data-id");
+
+                products.push(id);
+                $.cookie('CartProducts', products.join('-'), { expires: 365 }, { path: '/' });
+                updateCartProducts();
+                swal("Done", "Item added to Cart successfully", "success");
+
+
+            })
+
+            updateCartProducts();
+            function updateCartProducts() {
+                var cartProducts;
+                var existingCookieData = $.cookie('CartProducts');
+
+                if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+                    cartProducts = existingCookieData.split('-');
+                }
+                else {
+                    cartProducts = [];
+                }
+
+                $("#cartCount").html(cartProducts.length);
+
+            };
+
+
+            var fav;
+            $(".favs").click(function () {
+                var existingCookieData = $.cookie('favProducts');
+
+                if (existingCookieData != undefined && existingCookieData != "" && existingCookieData != null) {
+                    fav = existingCookieData.split('-');
+                }
+                else {
+                    fav = [];
+                }
+
+                var id = $(this).attr("data-id");
+
+                fav.push(id);
+                $.cookie('favProducts', fav.join('-'), { expires: 365 }, { path: '/' });
+
+
+
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('body').html(result);
+                        swal("Done", "Item added to Favourite successfully", "success");
+
+                    }
+                });
+
+
+            })
+
+
+
+
+            $(".btn_checkout").click(function () {
+                $(".checkout").fadeIn()
+            })
+
+
+            $(".cross").click(function () {
+                $(".checkout").fadeOut()
+            })
+
+
+
+
+            $(".remove").click(function () {
+                var id = $(this).attr("data-id");
+
+                var uniqueArray = [];
+                var cart_cookie = $.cookie('CartProducts').split('-');
+
+
+
+                for (i = 0; i < cart_cookie.length; i++) {
+                    var name = cart_cookie[i];
+                    if (id != name) {
+                        uniqueArray.push(name);
+                    }
+                }
+
+                $.cookie('CartProducts', uniqueArray.join('-'), { expires: 365 }, { path: '/' })
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('body').html(result);
+                    }
+                });
+
+            });
+
+
+            $(".fav_delete").click(function () {
+                var id = $(this).attr("data-id");
+
+                var uniqueArray = [];
+                var cart_cookie = $.cookie('favProducts').split('-');
+
+                swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this imaginary file!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            for (i = 0; i < cart_cookie.length; i++) {
+                                var name = cart_cookie[i];
+                                if (id != name) {
+                                    uniqueArray.push(name);
+                                }
+                            }
+
+                            $.cookie('favProducts', uniqueArray.join('-'), { expires: 365 }, { path: '/' })
+
+                            $.ajax({
+                                url: window.location.href,
+                                type: 'GET',
+                                cache: false,
+                                success: function (result) {
+                                    $('body').html(result);
+                                }
+                            });
+
+                        } 
+                    });
+
+               
+               
+
+            });
+
+
+
+
+            $("#Order").click(function () {
+                var arr = [];
+                $.ajax({
+                    url: "/Home/Order",
+                    type: 'POST',
+                    cache: false,
+                    data: {
+
+                    },
+                    success: function (result) {
+                        $.cookie('CartProducts', arr.join('-'), { expires: 365 }, { path: '/' })
+                        window.location.href = "/Home/Index";
+                    }
+                });
+
+            })
+
+
+
+            $("#Contact_sub").click(function () {
+                var name = $("#author").val();
+                var email = $("#email").val();
+                var subject = $("#subject").val();
+                var msg = $("#msg").val();
+
+                if (name == "" || email == "" || subject == "" || msg == "") {
+                    return false;
+                }
+                else {
+                    $.ajax({
+                        url: "/Home/Contact",
+                        type: 'POST',
+                        cache: false,
+                        data: {
+                            name: name,
+                            email: email,
+                            subject: subject,
+                            msg: msg
+                        },
+                        success: function (result) {
+                            $("#author").val("");
+                            $("#email").val("");
+                            $("#subject").val("");
+                            $("#msg").val("");
+                            swal("Done", "Item added to Favourite successfully", "success");
+                        }
+                    });
+                }
+
+            })
+
+
+
+        
+
+
+
+            //UPDATE YEAR AUTOMATICALLY
+            var today = new Date();
+            var year = today.getFullYear();
+            document.getElementById('year').innerHTML = year;
+
+
+
+            
+
+            
+
+
+        })
+    </script>
+
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.actions.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.carousel.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.kenburn.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.layeranimation.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.migration.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.navigation.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.parallax.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.slideanims.min.js"></script>
+    <script src="~/Content/rev-slider/js/extensions/revolution.extension.video.min.js"></script>
+
+
+
+
+    <script>
+        var MenuItems = document.getElementById('MenuItems');
+        MenuItems.style.maxHeight = '0px';
+
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == '0px') {
+                MenuItems.style.maxHeight = '200px';
+            } else {
+                MenuItems.style.maxHeight = '0px';
+            }
+        }
+
+        
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

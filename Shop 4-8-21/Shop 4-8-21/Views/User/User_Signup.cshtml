@@ -1,0 +1,172 @@
+﻿@model Shop_4_8_21.Models.tbl_user
+
+@{
+    ViewBag.Title = "User_Signup";
+}
+
+<h1 class="text-center mt-5 mb-5" >Signup Form</h1>
+
+
+@using (Html.BeginForm("User_Signup","User",FormMethod.Post)) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="container">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+ 
+
+    <div class="mb-5">
+
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.u_name, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.u_name, new { htmlAttributes = new { @class = "form_input", @placeholder = "Name" } })
+                @Html.ValidationMessageFor(model => model.u_name, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.u_email, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.u_email, new { htmlAttributes = new { @class = "form_input", @placeholder = "Email" } })
+                @Html.ValidationMessageFor(model => model.u_email, "", new { @class = "text-danger" })
+                <small>Please add a valid email address</small>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.u_password, htmlAttributes: new { @class = "form_label" })
+                <div>
+                    @Html.PasswordFor(model => model.u_password, new { @class = "form_input", @placeholder = "Password" })
+                    <i class="fa fa-eye fa-lg text-danger" id="toggle_pass"></i>
+                </div>
+                @Html.ValidationMessageFor(model => model.u_password, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="col-md-6 mb-4">
+                <label class="form_label">Confirm Password</label>
+                <input type="password" id="c_pass" placeholder="Confirm Password" />
+                <p class="err"></p>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                @Html.LabelFor(model => model.u_address, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.u_address, new { htmlAttributes = new { @class = "form_input", @placeholder = "Address" } })
+                @Html.ValidationMessageFor(model => model.u_address, "", new { @class = "text-danger" })
+            </div>
+
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.u_contact, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.u_contact, new { htmlAttributes = new { @class = "form_input", @placeholder = "Contact" } })
+                @Html.ValidationMessageFor(model => model.u_contact, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.u_city, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.u_city, new { htmlAttributes = new { @class = "form_input", @placeholder = "City" } })
+                @Html.ValidationMessageFor(model => model.u_city, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <div class="text-center">
+                <button type="submit" class="px-5" id="btn_signup">Sign Up Now</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    }
+
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#c_pass").keyup(function () {
+                var pass = $("#u_password").val();
+                var c_pass = $("#c_pass").val();
+
+                if (c_pass != pass) {
+
+                    $(".err").html("Password Dont Match");
+                    $(".err").css("color", "red");
+                    return false;
+
+                }
+                else {
+                    $(".err").html("Password Match");
+                    $(".err").css("color", "#4cbb17");
+                }
+            })
+
+
+            $("#btn_signup").click(function () {
+                var name = $("#u_name").val();
+                var email = $("#u_email").val();
+                var pass = $("#u_password").val();
+                var contact = $("#u_contact").val();
+                var address = $("#u_address").val();
+                var city = $("#u_city").val();
+                var c_pass = $("#c_pass").val();
+
+
+                if ((name == "") || (email == "") || (pass == "") || (contact == "") || (address == "") || (city == "")) {
+
+                    swal("Please fill all input tags");
+                    return false;
+
+                }
+                else {
+                    if (c_pass == pass) {
+                        return true;
+                    }
+                    else {
+                        swal("Password Dont Match");
+                        return false;
+                    }
+                }
+            })
+
+
+            $("#toggle_pass").click(function () {
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                $(this).css("cursor", "pointer");
+
+                var type = $(this).hasClass("fa-eye-slash") ? "text" : "password";
+                $("#u_password").attr("type", type);
+                
+            })
+
+          
+
+
+        })
+
+
+
+    </script>
+
+
+
+

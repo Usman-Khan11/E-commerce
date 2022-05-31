@@ -1,0 +1,93 @@
+﻿@model Shop_4_8_21.Models.tbl_product
+
+
+<h2 class="text-center font-weight-bold mt-5 mb-5">Add New Product</h2>
+
+
+<p id="error"> </p>
+@using (Html.BeginForm("Product", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.p_name, htmlAttributes: new { @class = "form_label" })
+                @Html.EditorFor(model => model.p_name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.p_name, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="col-md-6 mb-4">
+                @Html.LabelFor(model => model.p_price, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.p_price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.p_price, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.p_discription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div>
+                @Html.EditorFor(model => model.p_discription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.p_discription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group mb-5">
+            @Html.LabelFor(model => model.cat_fk, "cat_fk", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div>
+                @Html.DropDownListFor(model => model.cat_fk, ViewBag.cat as SelectList, "Select Category", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.cat_fk, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label>Select Product Image</label>
+            <div>
+                <input type="file" name="ImageFile" id="file" class="form-control-file" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <input type="submit" value="Add New Product" class="btn btn-dark btn-block mt-5" id="product_btn" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#product_btn").click(function () {
+            var name = $("#p_name").val();
+            var desc = $("#p_discription").val();
+            var price = $("#p_price").val();
+            var category = $("#cat_fk").val();
+            var file = $("#file").val();
+
+            if (name == "" || desc == "" || price == "" || category == "" || file == null) {
+                swal("Please fill all input tags");
+                //$("#error").html("input must be required");
+                return false;
+            }
+            else {
+                return true;
+            }
+
+        })
+
+    })
+</script>
+
